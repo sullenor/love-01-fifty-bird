@@ -9,6 +9,7 @@ require 'PipePair'
 require 'StateMachine'
 require 'States/BaseState'
 require 'States/PlayState'
+require 'States/ScoreState'
 
 -- physical screen dimensions
 WINDOW_WIDTH = 1280
@@ -33,11 +34,16 @@ function love.load()
   love.graphics.setDefaultFilter('nearest', 'nearest')
   love.window.setTitle('Fifty Bird')
 
-  math.randomseed(os.time())
+  displayFont = love.graphics.newFont('font.ttf', 16)
+  messageFont = love.graphics.newFont('font.ttf', 24)
+  titleFont = love.graphics.newFont('font.ttf', 32)
+
+  math.randomseed(1)
 
   -- "g" prefix is a naming convention used for the global variables
   gStateMachine = StateMachine {
-    play = function () return PlayState() end
+    play = function () return PlayState() end,
+    score = function () return ScoreState() end
   }
   gStateMachine:change('play')
 

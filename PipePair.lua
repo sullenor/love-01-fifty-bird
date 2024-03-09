@@ -1,7 +1,7 @@
 -- combines top and bottom pipes together
 PipePair = Class{}
 
-local pipeDistance = 90
+local pipeDistance = 110
 local pipeScrollSpeed = 60
 
 function PipePair:init(centerY)
@@ -14,7 +14,9 @@ function PipePair:init(centerY)
   }
 
   self.width = self.pipes.top.width
+
   self.remove = false
+  self.scored = false
 end
 
 function PipePair:render()
