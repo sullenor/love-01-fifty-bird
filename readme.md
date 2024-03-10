@@ -17,3 +17,5 @@ love .
 ## References
 
 - Original implementation from the lecture: [link](https://github.com/games50/fifty-bird).
+- Music assets: https://freesound.org/
+- Sound assets: https://www.bfxr.net

@@ -1,12 +1,30 @@
 ScoreState = Class{__includes = BaseState}
 
 function ScoreState:init()
+  self.medals = {}
   self.scores = 0
 end
 
-function ScoreState:enter(scores)
+function ScoreState:enter(payload)
   scrolling = false
-  self.scores = scores or 0
+
+  self.scores = payload and payload.scores or 0
+  local medals = payload and payload.medals or 0
+
+  -- display earned medals
+  if medals and medals > 0 then
+    local centerX = -18 * payload.medals / 2
+
+    for i = 1,payload.medals do
+      table.insert(
+        self.medals,
+        Medal(
+          0.5 * VIRTUAL_WIDTH + centerX + 18 * (i - 1),
+          0.5 * VIRTUAL_HEIGHT + 33
+        )
+      )
+    end
+  end
 end
 
 function ScoreState:render()
@@ -27,9 +45,17 @@ function ScoreState:render()
     0.5 * VIRTUAL_WIDTH - 97,
     0.5 * VIRTUAL_HEIGHT + centerY + 38
   )
+
+  for _, medal in ipairs(self.medals) do
+    medal:render()
+  end
 end
 
 function ScoreState:update(dt)
+  for _, medal in ipairs(self.medals) do
+    medal:update(dt)
+  end
+
   if love.keyboard.wasPressed('return') then
     gStateMachine:change('play')
   end

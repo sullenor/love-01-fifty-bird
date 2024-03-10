@@ -3,6 +3,7 @@ push = require 'push'
 
 -- import objects
 require 'Bird'
+require 'Medal'
 require 'Pipe'
 require 'PipePair'
 -- import states
@@ -115,13 +116,6 @@ function love.draw()
   love.graphics.draw(backgroundImage, -backgroundScroll, 0)
   gStateMachine:render()
   love.graphics.draw(groundImage, -groundScroll, VIRTUAL_HEIGHT - 16)
-
-  love.graphics.setFont(smallFont)
-  love.graphics.print(
-    'Press SPACE to jump',
-    0.5 * VIRTUAL_WIDTH - 43,
-    VIRTUAL_HEIGHT - 8
-  )
 
   push:finish()
 end

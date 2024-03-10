@@ -6,6 +6,8 @@ function PlayState:init()
   self.pipeSpawnInterval = 2
   self.timer = 1
 
+  self.medals = {}
+  self.medalsCount = 0
   self.scores = 0
   self.scoreThreshold = (VIRTUAL_WIDTH - self.bird.width) / 2
 
@@ -42,6 +44,11 @@ function PlayState:render()
       0.5 * VIRTUAL_HEIGHT - 14
     )
   end
+
+  -- render medals
+  for _, medal in ipairs(self.medals) do
+    medal:render()
+  end
 end
 
 function PlayState:update(dt)
@@ -50,6 +57,7 @@ function PlayState:update(dt)
     scrolling = not self.paused
   end
 
+  -- stop updates while paused
   if self.paused then
     return
   end
@@ -66,6 +74,11 @@ function PlayState:update(dt)
 
   self.bird:update(dt)
 
+  -- handle medal animation
+  for _, medal in ipairs(self.medals) do
+    medal:update(dt)
+  end
+
   for _, pipePair in ipairs(self.pipeCollection) do
     -- update pipe position
     pipePair:update(dt)
@@ -76,6 +89,20 @@ function PlayState:update(dt)
     then
       pipePair.scored = true
       self.scores = self.scores + 1
+
+      -- award medal
+      local expectedScores = 4 + 8 * self.medalsCount * (self.medalsCount + 1) / 2
+      if
+        self.scores == expectedScores and
+        self.medalsCount < 6
+      then
+        self.medalsCount = self.medalsCount + 1
+
+        table.insert(
+          self.medals,
+          Medal(0.78 * VIRTUAL_WIDTH - 18 * self.medalsCount - 10, 0)
+        )
+      end
     end
 
     -- schedule invisible pipes for delition
@@ -87,7 +114,10 @@ function PlayState:update(dt)
     for _, pipe in pairs(pipePair.pipes) do
       if self.bird:collides(pipe) then
         sounds.hurt:play()
-        gStateMachine:change('score', self.scores)
+        gStateMachine:change('score', {
+          medals = self.medalsCount,
+          scores = self.scores
+        })
       end
     end
   end
@@ -95,7 +125,10 @@ function PlayState:update(dt)
   -- check ground
   if self.bird.y + self.bird.height > VIRTUAL_HEIGHT - 16 then
     sounds.hurt:play()
-    gStateMachine:change('score', self.scores)
+    gStateMachine:change('score', {
+      medals = self.medalsCount,
+      scores = self.scores
+    })
   end
 
   -- cleanup pipes
