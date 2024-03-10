@@ -9,11 +9,27 @@ function ScoreState:enter(scores)
 end
 
 function ScoreState:render()
+  local centerY = -29
+  local centerX = self.scores > 9 and -6 or 0
+
   love.graphics.setColor(255, 255, 255)
-  love.graphics.setFont(messageFont)
+  love.graphics.setFont(titleFont)
   love.graphics.print(
     'You scored '..tostring(self.scores),
-    0.5 * VIRTUAL_WIDTH - 80,
-    0.5 * VIRTUAL_HEIGHT - 12
+    0.5 * VIRTUAL_WIDTH + centerX - 110,
+    0.5 * VIRTUAL_HEIGHT + centerY
   )
+
+  love.graphics.setFont(displayFont)
+  love.graphics.print(
+    'Press ENTER to restart',
+    0.5 * VIRTUAL_WIDTH - 97,
+    0.5 * VIRTUAL_HEIGHT + centerY + 38
+  )
+end
+
+function ScoreState:update(dt)
+  if love.keyboard.wasPressed('return') then
+    gStateMachine:change('play')
+  end
 end

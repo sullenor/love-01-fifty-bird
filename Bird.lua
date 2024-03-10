@@ -14,6 +14,7 @@ function Bird:init()
   self.y = (VIRTUAL_HEIGHT - self.height) / 2
 
   self.dy = 0
+  self.controlled = false
 end
 
 function Bird:collides(pipe)
@@ -35,9 +36,7 @@ function Bird:collides(pipe)
 end
 
 function Bird:render()
-  local angle = self.dy > 0 and 0.1 * math.pi
-    or self.dy < 0 and -0.1 * math.pi
-    or 0
+  local angle = 0.05 * math.pi * self.dy
 
   love.graphics.draw(
     self.image,
@@ -52,10 +51,15 @@ function Bird:render()
 end
 
 function Bird:update(dt)
-  self.dy = self.dy + 0.5 * g * dt * dt
+  if self.controlled then
+    self.dy = self.dy + 0.5 * g * dt * dt
+  end
 
   if love.keyboard.wasPressed('space') then
+    sounds.jump:play()
+
     self.dy = -0.004 * g
+    self.controlled = true
   end
 
   self.y = self.y + self.dy

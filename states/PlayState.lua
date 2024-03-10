@@ -9,6 +9,11 @@ function PlayState:init()
   self.timer = 1
 end
 
+function PlayState:enter()
+  -- generate the same level on each run
+  math.randomseed(1)
+end
+
 function PlayState:render()
   -- render bird behind pipes
   self.bird:render()
@@ -59,6 +64,7 @@ function PlayState:update(dt)
     -- detect collisions
     for _, pipe in pairs(pipePair.pipes) do
       if self.bird:collides(pipe) then
+        sounds.hurt:play()
         gStateMachine:change('score', self.scores)
       end
     end
@@ -66,6 +72,7 @@ function PlayState:update(dt)
 
   -- check ground
   if self.bird.y + self.bird.height > VIRTUAL_HEIGHT - 16 then
+    sounds.hurt:play()
     gStateMachine:change('score', self.scores)
   end
 
