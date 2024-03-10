@@ -4,12 +4,16 @@ function PlayState:init()
   self.bird = Bird()
   self.pipeCollection = {}
   self.pipeSpawnInterval = 2
+  self.timer = 1
+
   self.scores = 0
   self.scoreThreshold = (VIRTUAL_WIDTH - self.bird.width) / 2
-  self.timer = 1
+
+  self.paused = false
 end
 
 function PlayState:enter()
+  scrolling = true
   -- generate the same level on each run
   math.randomseed(1)
 end
@@ -29,9 +33,27 @@ function PlayState:render()
     0.78 * VIRTUAL_WIDTH,
     8
   )
+
+  if self.paused then
+    love.graphics.setFont(titleFont)
+    love.graphics.print(
+      'PAUSED',
+      0.5 * VIRTUAL_WIDTH - 57,
+      0.5 * VIRTUAL_HEIGHT - 14
+    )
+  end
 end
 
 function PlayState:update(dt)
+  if love.keyboard.wasPressed('return') then
+    self.paused = not self.paused
+    scrolling = not self.paused
+  end
+
+  if self.paused then
+    return
+  end
+
   self.timer = self.timer + dt
 
   if self.timer > self.pipeSpawnInterval then

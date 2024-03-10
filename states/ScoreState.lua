@@ -5,6 +5,7 @@ function ScoreState:init()
 end
 
 function ScoreState:enter(scores)
+  scrolling = false
   self.scores = scores or 0
 end
 

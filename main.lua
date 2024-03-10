@@ -32,6 +32,8 @@ local groundScrollSpeed = 60
 -- empirical value obtrained through image copy overlay shifted by this value
 local groundLoopingPoint = 136
 
+scrolling = true
+
 function love.load()
   love.graphics.setDefaultFilter('nearest', 'nearest')
   love.window.setTitle('Fifty Bird')
@@ -94,10 +96,12 @@ function love.keyboard.wasPressed(key)
 end
 
 function love.update(dt)
-  backgroundScroll = (backgroundScroll + dt * backgroundScrollSpeed) %
-    backgroundLoopingPoint
-  groundScroll = (groundScroll + dt * groundScrollSpeed) %
-    groundLoopingPoint
+  if scrolling then
+    backgroundScroll = (backgroundScroll + dt * backgroundScrollSpeed) %
+      backgroundLoopingPoint
+    groundScroll = (groundScroll + dt * groundScrollSpeed) %
+      groundLoopingPoint
+  end
 
   gStateMachine:update(dt)
 
