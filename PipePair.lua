@@ -8,9 +8,11 @@ function PipePair:init(centerY)
   self.x = VIRTUAL_WIDTH
   self.y = centerY
 
+  local distance = pipeDistance + math.random(-10, 20)
+
   self.pipes = {
-    top = Pipe('top', self.y - pipeDistance / 2),
-    bottom = Pipe('bottom', self.y + pipeDistance / 2)
+    top = Pipe('top', self.y - distance / 2),
+    bottom = Pipe('bottom', self.y + distance / 2)
   }
 
   self.width = self.pipes.top.width
